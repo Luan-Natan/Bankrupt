@@ -21,7 +21,6 @@ public class Acoes
         this.tabuleiro.setQtdRodada();
     }
 
-
     private void jogarDado(Player player)
     {
         Random random = new Random();
@@ -34,8 +33,4 @@ public class Acoes
     {
         player.setPosicao(numeroCasas, this.tabuleiro);
     }
-
-
-
-    //Verificar vitoria
 }

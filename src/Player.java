@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Player extends Acoes
 {
     private int posicao;

@@ -1,29 +1,27 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Tabuleiro
 {
     private int[][] casas;
     public Player[] players;
     private int qtdRodada;
-    private int qtdPartida;
+
+    private int qtdPartida = 0;
+    private int qtdRodadaLimite = 1000;
+    private int qtdPartidaLimite = 300;
+
 
     private double mediaPartida;
     private int qtdTimeOut;
     private int totalRodada;
 
+
     public int[][] getCasas() {
         return casas;
     }
-
-    // 0, 1, 2, 3
-    // 1, 4, 3, 2
-
-    // 0, 1, 2, 3
-    // 3, 2, 4, 1
 
 
     //Cadastrar Players
@@ -31,8 +29,9 @@ public class Tabuleiro
     {
         this.players = new Player[]{impulsivo, exigente, cauteloso, aleatorio};
 
-        //Arrays.sort(this.players);
+        Collections.shuffle(Arrays.asList(this.players));
     }
+
 
 
     //Metricas
@@ -44,6 +43,13 @@ public class Tabuleiro
         this.qtdRodada += 1;
     }
 
+    public int getQtdRodadaLimite() {
+        return qtdRodadaLimite;
+    }
+
+    public int getQtdPartidaLimite() {
+        return qtdPartidaLimite;
+    }
 
     public int getQtdPartida() {
         return qtdPartida;
@@ -59,7 +65,6 @@ public class Tabuleiro
         if(this.qtdRodada == 1000) this.qtdTimeOut += 1;
     }
 
-
     public double getMediaPartida() {
         return mediaPartida;
     }
@@ -67,9 +72,11 @@ public class Tabuleiro
     public void setMediaPartida() {
         this.totalRodada += this.qtdRodada;
 
-        this.mediaPartida = (float)this.totalRodada / (float)this.qtdPartida;
+        this.mediaPartida = (float)this.totalRodada / this.qtdPartida;
     }
 
+
+    //Resultados
     private String playerComMaisVitoria()
     {
         int maior = 0;
@@ -87,16 +94,15 @@ public class Tabuleiro
 
     public void apurarResultados()
     {
-        System.out.println("Quantidade de partidas: " + getQtdPartida());
-        System.out.println("Quantidade de rodadas: " + getQtdRodada());
-        System.out.println("Média de rodadas de uma de partida: " + getMediaPartida());
+        System.out.println("\nQuantidade de partidas por timeout: " + this.qtdTimeOut);
+        System.out.println("Média de rodadas de uma de partida: " + this.getMediaPartida());
 
-        System.out.println("Média % vitórias Player impulsivo: " + (this.players[0].getQtdVitoria() / getQtdPartida()) * 100);
-        System.out.println("Média % vitórias Player exigente : " + (this.players[1].getQtdVitoria() / getQtdPartida()) * 100);
-        System.out.println("Média % vitórias Player cauteloso: " + (this.players[2].getQtdVitoria() / getQtdPartida()) * 100);
-        System.out.println("Média % vitórias Player aleatório: " + (this.players[3].getQtdVitoria() / getQtdPartida()) * 100);
+        System.out.println("\nMédia % vitórias Player " + this.players[0].getComportamento() + ": " + ((float)this.players[0].getQtdVitoria() / this.getQtdPartida()) * 100);
+        System.out.println("Média % vitórias Player " + this.players[1].getComportamento() + ": " + ((float)this.players[1].getQtdVitoria() / this.getQtdPartida()) * 100);
+        System.out.println("Média % vitórias Player " + this.players[2].getComportamento() + ": " + ((float)this.players[2].getQtdVitoria() / this.getQtdPartida()) * 100);
+        System.out.println("Média % vitórias Player " + this.players[3].getComportamento() + ": " + ((float)this.players[3].getQtdVitoria() / this.getQtdPartida()) * 100);
 
-        System.out.println("Comportamento com mais vitórias: " + playerComMaisVitoria());
+        System.out.println("\nComportamento com mais vitórias: " + playerComMaisVitoria());
     }
 
 
@@ -137,6 +143,7 @@ public class Tabuleiro
     }
 
 
+
     //Tabuleiro
     public void montarTabuleiro()
     {
@@ -175,5 +182,18 @@ public class Tabuleiro
             }
             System.out.println();
         }
+    }
+
+    public Player verificarResultadoPartida()
+    {
+        List<Player> playersFinalPartida = Arrays.stream(this.players)
+                .filter(player -> player.getSaldo() > 0)
+                .toList();
+
+        if (this.qtdRodada == this.getQtdRodadaLimite()) return playersFinalPartida.get(0);
+
+        if (playersFinalPartida.size() == 1) return playersFinalPartida.get(0);
+
+        return null;
     }
 }
