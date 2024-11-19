@@ -62,7 +62,7 @@ public class Tabuleiro
 
         player.setQtdVitoria();
 
-        if(this.qtdRodada == 1000) this.qtdTimeOut += 1;
+        if(this.qtdRodada == this.qtdRodadaLimite) this.qtdTimeOut += 1;
     }
 
     public double getMediaPartida() {

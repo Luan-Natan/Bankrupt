@@ -55,8 +55,10 @@ public class Player extends Acoes
            //quando o player completar uma volta no tabuleiro, somar 100 de saldo
             this.somarSaldo(100);
         }
-
-        this.posicao += posicao;
+        else
+        {
+            this.posicao = posicaoFutura;
+        }
     }
 
 
